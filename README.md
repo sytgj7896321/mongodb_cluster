@@ -1,38 +1,57 @@
-Role Name
-=========
+Install mongodb cluster of any size(include shard config mongos) in one role
 
-A brief description of the role goes here.
+Just for Centos/Redhat
 
-Requirements
-------------
+Create var files in group_vars like
+---
+Server_Roles:
+  Mongodb:
+    Version: '4.4.3'
+    Install_Dir: '/usr/local/mongodb'
+    Data_Dir: '/data/mongodb'
+    Username: 'mongod'
+    Groupname: 'mongod'
+    Comment: 'MongoDB Database Server'
+    Home_Dir: '/var/lib/mongo'
+    Shell_Type: '/bin/false'
+    
+---
+Mongodb_Roles:
+  Type: config
+  Binary: mongod
+  Port: 27018
+  ReplSetName: config
+  
+---
+Mongodb_Roles:
+  Type: mongos
+  Binary: mongos
+  Port: 27017
+  Config_Port: 27018
+  Config_Group_Name: Sheca_MongoDB_Config_01
+  ReplSetName: config
+  Shard_List:
+  - { shard_group_name: 'Sheca_MongoDB_Shard_01_A1',shard_replicaset_name: 'shard01a1',shard_port: '27019' }
+  - { shard_group_name: 'Sheca_MongoDB_Shard_01_A2',shard_replicaset_name: 'shard01a2',shard_port: '27020' }
+  - { shard_group_name: 'Sheca_MongoDB_Shard_01_A3',shard_replicaset_name: 'shard01a3',shard_port: '27021' }
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+---
+Mongodb_Roles:
+  Type: shard
+  Binary: mongod
+  Port: 27019
+  ReplSetName: shard01a1
 
-Role Variables
---------------
-
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
-
-Dependencies
-------------
-
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
-
-Example Playbook
-----------------
-
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
-
-License
--------
-
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+---
+Mongodb_Roles:
+  Type: shard
+  Binary: mongod
+  Port: 27020
+  ReplSetName: shard01a2
+ 
+ ---
+Mongodb_Roles:
+  Type: shard
+  Binary: mongod
+  Port: 27021
+  ReplSetName: shard01a3
