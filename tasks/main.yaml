@@ -1,7 +1,4 @@
 ---
-#Temp
-- include: copy_hosts_file.yaml
-
 # tasks file for mongodb_cluster
 - include: create_user_group_dir.yaml
   
