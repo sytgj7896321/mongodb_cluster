@@ -15,7 +15,7 @@ Server_Roles:
     Comment: 'MongoDB Database Server'
     Home_Dir: '/var/lib/mongo'
     Shell_Type: '/bin/false'
-    
+ 
 ---
 Mongodb_Roles:
   Type: config
