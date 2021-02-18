@@ -1,0 +1,27 @@
+---
+#Temp
+- include: copy_hosts_file.yaml
+
+# tasks file for mongodb_cluster
+- include: create_user_group_dir.yaml
+  
+- include: upload_install_file.yaml
+
+- include: scripts_and_install_deps.yaml
+- meta: flush_handlers
+
+#Config and Shard
+- include: mongod_running_config.yaml
+  when: Binary_Type == 'mongod'
+- meta: flush_handlers
+
+- include: start_mongod.yaml
+  when: Binary_Type == 'mongod'
+
+#Mongos
+- include: mongos_running_config.yaml
+  when: Binary_Type == 'mongos'
+- meta: flush_handlers
+
+- include: start_mongos.yaml
+  when: Binary_Type == 'mongos'

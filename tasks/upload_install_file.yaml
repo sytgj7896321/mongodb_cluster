@@ -1,0 +1,18 @@
+---
+- name: Create Install Directory
+  file:
+    path: "{{ Install_Dir }}/{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+  - bin
+  - etc
+- name: Upload MongoDB Binary File
+  copy:
+    src: "{{ Distribution_Major }}/{{ Version }}/{{ Binary_Type }}"
+    dest: "{{ Install_Dir }}/bin/{{ Binary_Type }}"
+    owner: root
+    group: root
+    mode: 0755

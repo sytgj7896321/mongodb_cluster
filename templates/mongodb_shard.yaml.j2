@@ -1,0 +1,20 @@
+systemLog:
+   destination: file
+   path: {{ Data_Dir }}/log/{{ ReplSetName }}.log
+   logAppend: true
+storage:
+   journal:
+      enabled: true
+   dbPath: {{ Data_Dir }}/data/{{ ReplSetName }}
+net:
+   bindIp: 0.0.0.0
+   port: {{ Listen_Port }}
+setParameter:
+   enableLocalhostAuthBypass: false
+replication:
+   replSetName: {{ ReplSetName }}
+sharding:
+   clusterRole: shardsvr
+processManagement:
+   fork: true
+   pidFilePath: /var/run/mongodb/mongodb_{{ Listen_Port }}.pid

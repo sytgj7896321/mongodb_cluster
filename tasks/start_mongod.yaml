@@ -1,0 +1,33 @@
+---
+- name: Start MongoDB Server(Config and Shard)
+  systemd:
+    name: "{{ Mongo_Type }}_{{ Listen_Port }}"
+    state: started
+    enabled: yes
+
+- name: Wait Listen Port Up
+  wait_for:
+    host: "{{ inventory_hostname }}"
+    port: "{{ Listen_Port }}"
+    delay: 3
+    timeout: 10
+
+- name: Define List Var for Replicaset_Hosts
+  set_fact:
+    Replicaset_Hosts: []
+  when: inventory_hostname == All_Group_Hosts|first
+
+- name: Get Replicaset_Hosts
+  set_fact:
+    Replicaset_Hosts: "{{ Replicaset_Hosts }} + [ '{{ item }}:{{ Listen_Port }}' ]"
+  with_items: "{{ All_Group_Hosts }}" 
+  when: inventory_hostname == All_Group_Hosts|first
+
+- name: Create Replicaset
+  mongodb_replicaset:
+    login_host: localhost
+    login_port: "{{ Listen_Port }}"
+    replica_set: "{{ ReplSetName }}"
+    members: "{{ Replicaset_Hosts }}"
+  when: inventory_hostname == All_Group_Hosts|first
+

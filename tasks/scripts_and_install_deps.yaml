@@ -1,0 +1,25 @@
+---
+
+- name: Install Epel
+  yum:
+    name: epel-release
+    state: present
+
+- name: Install Pip
+  yum:
+    name: python-pip
+    state: present
+  
+- name: Upgrade Pip
+  pip:
+    name: pip==20.3.4
+
+- name: Install PyMongo
+  pip:
+    name: pymongo==3.11.3
+
+- name: Copy Systemd Scripts Templete of MongoDB
+  template:
+    src: mongodb.service.j2
+    dest: "/usr/lib/systemd/system/{{ Mongo_Type }}_{{ Listen_Port }}.service"
+  notify: Daemon Reload

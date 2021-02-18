@@ -1,0 +1,35 @@
+---
+- name: Create Group
+  group:
+    name: "{{ Groupname }}"
+    system: yes
+
+- name: Create User
+  user:
+    name: "{{ Username }}"
+    group: "{{ Groupname }}"
+    comment: "{{ Comment }}"
+    shell: "{{ Shell_Type }}"
+    home: "{{ Home_Dir }}"
+    system: yes
+
+- name: Create Data Directory for Config and Shard
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ Username }}"
+    group: "{{ Groupname }}"
+    mode: 0755
+  with_items:
+  - "{{ Data_Dir_Sub }}"
+  when: Binary_Type == 'mongod'
+
+- name: Create Data Directory for Mongos
+  file:
+    path: "{{ Data_Dir }}/log"
+    state: directory
+    owner: "{{ Username }}"
+    group: "{{ Groupname }}"
+    mode: 0755
+  when: Binary_Type == 'mongos'
+

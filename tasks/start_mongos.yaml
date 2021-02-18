@@ -1,0 +1,27 @@
+---
+- name: Start MongoDB Server(Mongos)
+  systemd:
+    daemon_reload: yes
+    name: "{{ Mongo_Type }}_{{ Listen_Port }}"
+    state: started
+    enabled: yes
+- name: Wait Listen Port Up
+  wait_for:
+    host: "{{ inventory_hostname }}"
+    port: "{{ Listen_Port }}"
+    delay: 3
+    timeout: 10
+
+- name: Prepare for Active Shards
+  shell: "str={{ item.shard_replicaset_name }}/; for s_i in {% for a_i in groups.get(item.shard_group_name) %} {{ a_i }} {% endfor %}; do str=${str}${s_i}:{{ item.shard_port }},; done; echo ${str%?}"
+  with_list: "{{ Shard_List }}"
+  register: Shard_List_Jointed
+  when: inventory_hostname == All_Group_Hosts|first
+
+- name: Active Shards
+  mongodb_shard:
+    login_host: localhost
+    login_port: "{{ Listen_Port }}"
+    shard: "{{ item.stdout }}"
+  with_list: "{{ Shard_List_Jointed.results }}"
+  when: inventory_hostname == All_Group_Hosts|first

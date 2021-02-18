@@ -1,0 +1,5 @@
+---
+- name: Copy MongoDB Host File
+  template:
+    src: mongodb_hosts.j2
+    dest: /etc/hosts

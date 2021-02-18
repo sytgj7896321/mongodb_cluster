@@ -1,0 +1,13 @@
+systemLog:
+  destination: file
+  path: {{ Data_Dir }}/log/mongos.log
+  logAppend: true
+net:
+  bindIp: 0.0.0.0
+  port: {{ Listen_Port }}
+# 将config server 添加到路由
+sharding:
+  configDB: {{ ReplSetName }}/{{ Config_Hosts_With_Port|join(',') }}
+processManagement:
+  fork: true
+  pidFilePath: /var/run/mongodb/mongodb_{{ Listen_Port }}.pid

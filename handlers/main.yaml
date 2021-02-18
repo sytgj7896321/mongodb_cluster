@@ -1,0 +1,10 @@
+---
+# handlers file for mongodb_cluster
+- name: Daemon Reload
+  systemd:
+    daemon_reload: yes
+
+- name: Restart MongoDB
+  systemd:
+    name: "{{ Mongo_Type }}_{{ Listen_Port }}"
+    state: restarted

@@ -1,0 +1,6 @@
+---
+- name: Copy Config Server Running Config Template
+  template:
+    src: "mongodb_{{ Mongo_Type }}.yaml.j2"
+    dest: "{{ Install_Dir }}/etc/mongodb_{{ Listen_Port }}.yaml"
+  notify: Restart MongoDB

@@ -1,0 +1,15 @@
+---
+- name: Define List Var for Config_Hosts
+  set_fact:
+    Config_Hosts_With_Port: []
+
+- name: Get Config_Hosts
+  set_fact:
+    Config_Hosts_With_Port: "{{ Config_Hosts_With_Port }} + [ '{{ item }}:{{ Config_Port }}' ]"
+  with_items: "{{ Config_Hosts }}" 
+
+- name: Copy MongoDB Server Running Config Template
+  template:
+    src: "mongodb_{{ Mongo_Type }}.yaml.j2"
+    dest: "{{ Install_Dir }}/etc/mongodb_{{ Listen_Port }}.yaml"
+  notify: Restart MongoDB
