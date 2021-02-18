@@ -3,6 +3,7 @@ Install mongodb cluster of any size(include shard config mongos) in one role
 Just for Centos/Redhat
 
 Create var files in group_vars like
+
 ---
 Server_Roles:
   Mongodb:
